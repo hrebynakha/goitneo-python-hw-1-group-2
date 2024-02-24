@@ -51,46 +51,51 @@ def get_birthdays_per_week(users):
             day_of_week = birthday_this_year.strftime("%A")
             days_of_birthday[day_of_week] += [name]
 
-
     for day, users_to_greet in days_of_birthday.items():
         print(f"{day}:", end=" ")
         print(*users_to_greet, sep=", ")
 
+
 def parse_input(user_input):
-    """ Parse user inputed commands"""
+    """Parse user inputed commands"""
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
+
 def add_contact(args, contacts):
-    """ Add contacts to contact ditictionary """
+    """Add contacts to contact ditictionary"""
     name, phone = args
     if name in contacts:
         return f"Warning: already exist. {change_contact(args, contacts)}"
     contacts[name] = phone
     return "Contact added."
 
+
 def change_contact(args, contacts):
-    """ Update contact in contacts ditictionary"""
+    """Update contact in contacts ditictionary"""
     name, new_number = args
     if name in contacts:
         contacts[name] = new_number
         return "Contact updated."
     return f"Contact with name {name} not found. You can add it by command add <name> <number>"
 
+
 def show_phone(name, contacts):
-    """ Show phone by name"""
+    """Show phone by name"""
     name = name[0]
     if name in contacts.keys():
         return contacts[name]
     return f"Contact with name {name} not found."
 
+
 def show_all(contacts):
-    """ Show all conatacts"""
+    """Show all conatacts"""
     info = ""
     for name, phone in contacts.items():
         info += f"{name}: {phone}\n"
-    return info.removesuffix('\n')
+    return info.removesuffix("\n")
+
 
 def main():
     """Main function"""

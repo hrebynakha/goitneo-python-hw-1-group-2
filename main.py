@@ -99,7 +99,7 @@ def show_all(contacts):
 
 def main():
     """Main function"""
-    # get_birthdays_per_week(users_list)
+    get_birthdays_per_week(users_list)
     contacts = {}
     print("Welcome to the assistant bot!")
     while True:

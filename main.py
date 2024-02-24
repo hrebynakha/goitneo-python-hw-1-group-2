@@ -56,9 +56,68 @@ def get_birthdays_per_week(users):
         print(f"{day}:", end=" ")
         print(*users_to_greet, sep=", ")
 
+def parse_input(user_input):
+    """ Parse user inputed commands"""
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
+
+def add_contact(args, contacts):
+    """ Add contacts to contact ditictionary """
+    name, phone = args
+    if name in contacts:
+        return f"Warning: already exist. {change_contact(args, contacts)}"
+    contacts[name] = phone
+    return "Contact added."
+
+def change_contact(args, contacts):
+    """ Update contact in contacts ditictionary"""
+    name, new_number = args
+    if name in contacts:
+        contacts[name] = new_number
+        return "Contact updated."
+    return f"Contact with name {name} not found. You can add it by command add <name> <number>"
+
+def show_phone(name, contacts):
+    """ Show phone by name"""
+    name = name[0]
+    if name in contacts.keys():
+        return contacts[name]
+    return f"Contact with name {name} not found."
+
+def show_all(contacts):
+    """ Show all conatacts"""
+    info = ""
+    for name, phone in contacts.items():
+        info += f"{name}: {phone}\n"
+    return info.removesuffix('\n')
+
 def main():
     """Main function"""
-    get_birthdays_per_week(users_list)
+    # get_birthdays_per_week(users_list)
+    contacts = {}
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input("Enter a command: ")
+        if not user_input:
+            print("Invalid input!")
+            continue
+        command, *args = parse_input(user_input)
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
+        if command == "hello":
+            print("How can I help you?")
+        elif command == "add":
+            print(add_contact(args, contacts))
+        elif command == "change":
+            print(change_contact(args, contacts))
+        elif command == "phone":
+            print(show_phone(args, contacts))
+        elif command == "all":
+            print(show_all(contacts))
+        else:
+            print("Invalid command.")
 
 
 if __name__ == "__main__":

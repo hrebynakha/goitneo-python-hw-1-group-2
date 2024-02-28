@@ -31,6 +31,20 @@ users_list = [
 ]
 
 
+def input_error(func):
+    """ Return error message if some function does not work with given args"""
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Give me name and phone please."
+        except KeyError:
+            return "Given name not found in contacts"
+        except IndexError:
+            return "Enter user name"
+
+    return inner
+
 def get_birthdays_per_week(users):
     """Return names of users that you need to greet with birstday"""
     days_of_birthday = defaultdict(list)
@@ -55,14 +69,14 @@ def get_birthdays_per_week(users):
         print(f"{day}:", end=" ")
         print(*users_to_greet, sep=", ")
 
-
+@input_error
 def parse_input(user_input):
     """Parse user inputed commands"""
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
-
+@input_error
 def add_contact(args, contacts):
     """Add contacts to contact ditictionary"""
     name, phone = args
@@ -71,7 +85,7 @@ def add_contact(args, contacts):
     contacts[name] = phone
     return "Contact added."
 
-
+@input_error
 def change_contact(args, contacts):
     """Update contact in contacts ditictionary"""
     name, new_number = args
@@ -80,15 +94,12 @@ def change_contact(args, contacts):
         return "Contact updated."
     return f"Contact with name {name} not found. You can add it by command add <name> <number>"
 
-
+@input_error
 def show_phone(name, contacts):
     """Show phone by name"""
-    name = name[0]
-    if name in contacts.keys():
-        return contacts[name]
-    return f"Contact with name {name} not found."
+    return contacts[name[0]]
 
-
+@input_error
 def show_all(contacts):
     """Show all conatacts"""
     info = ""
@@ -97,16 +108,14 @@ def show_all(contacts):
     return info.removesuffix("\n")
 
 
+
 def main():
     """Main function"""
-    get_birthdays_per_week(users_list)
+    #get_birthdays_per_week(users_list)
     contacts = {}
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-        if not user_input:
-            print("Invalid input!")
-            continue
         command, *args = parse_input(user_input)
         if command in ["close", "exit"]:
             print("Good bye!")

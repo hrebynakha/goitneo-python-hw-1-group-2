@@ -2,118 +2,25 @@
 The Python bot helper
 """
 
-from datetime import datetime
-from datetime import timedelta
-from collections import defaultdict
-
-users_list = [
-    {"name": "Bill Gates", "birthday": datetime(1955, 10, 28)},
-    {"name": "Same Gates", "birthday": datetime(1955, 10, 28)},
-    {"name": "Steve Jobs", "birthday": datetime(1955, 2, 24)},
-    {"name": "Cat Ivan", "birthday": datetime(2022, 2, 25)},
-    {"name": "Cat Kus", "birthday": datetime(2022, 2, 27)},
-    {"name": "Cat Kokos", "birthday": datetime(2022, 2, 27)},
-    {"name": "Dog Ivan", "birthday": datetime(2022, 2, 27)},
-    {"name": "Dog Kus", "birthday": datetime(2022, 2, 26)},
-    {"name": "Dog Kokos", "birthday": datetime(2022, 2, 27)},
-    {"name": "Tig Van", "birthday": datetime(2022, 2, 28)},
-    {"name": "Tig Ivan", "birthday": datetime(2022, 3, 1)},
-    {"name": "Tig Kus", "birthday": datetime(2022, 3, 2)},
-    {"name": "Tig Kokos", "birthday": datetime(2022, 3, 3)},
-    {"name": "Tig Fan", "birthday": datetime(2022, 3, 4)},
-    {"name": "Panda Fan", "birthday": datetime(2022, 3, 4)},
-    {"name": "Panda Kus", "birthday": datetime(2022, 3, 5)},
-    {"name": "Panda Kokos", "birthday": datetime(2022, 3, 6)},
-    {"name": "Panda Ivan", "birthday": datetime(2022, 3, 7)},
-    {"name": "Panda Cat", "birthday": datetime(2022, 3, 7)},
-    {"name": "Panda Dog", "birthday": datetime(2022, 3, 8)},
-    {"name": "Mark Zuckerberg", "birthday": datetime(1984, 5, 14)},
-]
+from models import AddressBook
+from utils import (
+    parse_input,
+    add_contact,
+    change_contact,
+    show_phone,
+    show_all,
+    handle_add,
+    show_all_addresess,
+    change_record_phone,
+    add_phone,
+    delete_address,
+    remove_phone,
+)
 
 
-def input_error(func):
-    """ Return error message if some function does not work with given args"""
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return "Give me name and phone please."
-        except KeyError:
-            return "Given name not found in contacts"
-        except IndexError:
-            return "Enter user name"
-        except Exception:
-            return "Something going wrong.."
-
-    return inner
-
-def get_birthdays_per_week(users):
-    """Return names of users that you need to greet with birstday"""
-    days_of_birthday = defaultdict(list)
-    today = datetime.today().date()
-    for user in users:
-        name = user["name"]
-        birthday = user["birthday"].date()
-        birthday_this_year = birthday.replace(year=today.year)
-        if birthday_this_year < today:
-            birthday_this_year = birthday_this_year.replace(year=today.year + 1)
-        delta_days = (birthday_this_year - today).days
-        if delta_days < 7:
-            if birthday_this_year.weekday() in range(5, 7):
-                days_to_append = 7 % birthday_this_year.weekday()
-                birthday_this_year = birthday_this_year + timedelta(days=days_to_append)
-        delta_days = (birthday_this_year - today).days
-        if delta_days < 7:
-            day_of_week = birthday_this_year.strftime("%A")
-            days_of_birthday[day_of_week] += [name]
-
-    for day, users_to_greet in days_of_birthday.items():
-        print(f"{day}:", end=" ")
-        print(*users_to_greet, sep=", ")
-
-@input_error
-def parse_input(user_input):
-    """Parse user inputed commands"""
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, *args
-
-@input_error
-def add_contact(args, contacts):
-    """Add contacts to contact ditictionary"""
-    name, phone = args
-    if name in contacts:
-        return f"Warning: already exist. {change_contact(args, contacts)}"
-    contacts[name] = phone
-    return "Contact added."
-
-@input_error
-def change_contact(args, contacts):
-    """Update contact in contacts ditictionary"""
-    name, new_number = args
-    if name in contacts:
-        contacts[name] = new_number
-        return "Contact updated."
-    return f"Contact with name {name} not found. You can add it by command add <name> <number>"
-
-@input_error
-def show_phone(name, contacts):
-    """Show phone by name"""
-    return contacts[name[0]]
-
-@input_error
-def show_all(contacts):
-    """Show all conatacts"""
-    info = ""
-    for name, phone in contacts.items():
-        info += f"{name}: {phone}\n"
-    return info.removesuffix("\n")
-
-
-
-def main():
-    """Main function"""
-    #get_birthdays_per_week(users_list)
+def main_hw_2_1():
+    """Main function for check Home workd #2/1"""
+    # get_birthdays_per_week(users_list)
     contacts = {}
     print("Welcome to the assistant bot!")
     while True:
@@ -134,6 +41,39 @@ def main():
             print(show_all(contacts))
         else:
             print("Invalid command.")
+
+
+def main():
+    """Main function in Home work #2/2"""
+    print("Welcome to the assistant bot!")
+    book = AddressBook()
+    while True:
+        user_input = input("Enter a command: ")
+        command, *args = parse_input(user_input)
+
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
+        if command == "hello":
+            print("How can I help you?")
+        elif command == "add":
+            print(handle_add(book, *args))
+        elif command == "all":
+            print(
+                show_all_addresess(
+                    book,
+                )
+            )
+        elif command == "change":
+            print(change_record_phone(book, *args))
+        elif command == "addphone":
+            print(add_phone(book, *args))
+        elif command == "removephone":
+            print(remove_phone(book, *args))
+        elif command == "del":
+            print(delete_address(book, *args))
+        else:
+            print("Invalid commmand.")
 
 
 if __name__ == "__main__":

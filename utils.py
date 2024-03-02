@@ -103,8 +103,6 @@ def show_all(contacts):
 def handle_add(book, *args):
     """Add record to address book"""
     name, phone = args
-    print(args)
-    print(name, phone)
     if book.find(name):
         raise ContactAlredyExist
     record = Record(name)

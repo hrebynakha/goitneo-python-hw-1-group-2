@@ -19,7 +19,7 @@ from utils import (
 
 
 def main_hw_2_1():
-    """Main function for check Home workd #2/1"""
+    """Main function for check Home work #2/1"""
     # get_birthdays_per_week(users_list)
     contacts = {}
     print("Welcome to the assistant bot!")
@@ -73,7 +73,7 @@ def main():
         elif command == "del":
             print(delete_address(book, *args))
         else:
-            print("Invalid commmand.")
+            print("Invalid command.")
 
 
 if __name__ == "__main__":

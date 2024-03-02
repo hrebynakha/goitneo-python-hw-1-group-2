@@ -42,6 +42,8 @@ def input_error(func):
             return "Given name not found in contacts"
         except IndexError:
             return "Enter user name"
+        except Exception:
+            return "Something going wrong.."
 
     return inner
 
